@@ -1,0 +1,8 @@
+# OpenBox Device Registry
+# Only registered devices can connect
+# Format: DEVICE_ID|DEVICE_NAME|USER|REGISTERED_DATE
+
+# Super Admin Devices
+MASTER-KANOR-PHONE|Android A5|superadmin|2026-07-01
+
+# Sub Admin Devices - Add below

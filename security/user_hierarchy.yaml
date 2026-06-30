@@ -1,0 +1,47 @@
+# OpenBox User Hierarchy
+# Super Admin: Full access, YubiKey + 2FA required
+# Sub Admin: Limited access, 2FA required
+
+super_admin:
+  username: admin
+  full_name: Charles Tanauan (Master Kanor)
+  role: Super Admin
+  access: full
+  auth:
+    yubikey: true
+    two_factor: true
+    ssh_keys: true
+  permissions:
+    - all_storages
+    - user_management
+    - system_config
+    - security_policy
+    - backup_restore
+    - audit_logs
+  devices:
+    - MASTER-KANOR-PHONE
+    - MASTER-KANOR-LAPTOP
+  emergency_access: true
+  backup_admin: true
+
+sub_admin:
+  username: subadmin
+  full_name: Team Member
+  role: Sub Admin
+  access: limited
+  auth:
+    yubikey: false
+    two_factor: true
+    ssh_keys: false
+  permissions:
+    - storage_access
+    - file_management
+    - view_logs
+    - create_shares
+  devices:
+    - SUB-ADMIN-PHONE
+    - SUB-ADMIN-LAPTOP
+  emergency_access: false
+  backup_admin: false
+
+# Add more users below

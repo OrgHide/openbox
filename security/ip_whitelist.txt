@@ -1,0 +1,13 @@
+# OpenBox IP Whitelist
+# Only these IPs can access OpenBox
+# Format: IP_ADDRESS DESCRIPTION
+
+# Super Admin (Emergency Access)
+127.0.0.1 LOCAL_SUPER_ADMIN
+
+# Sub Admins - Add your IPs here
+# 192.168.1.100 SUB_ADMIN_1
+# 10.0.0.50 SUB_ADMIN_2
+# 203.0.113.5 REMOTE_SUPER_ADMIN
+
+# Add your IPs below this line

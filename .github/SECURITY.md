@@ -1,71 +1,39 @@
-# 🔐 OpenBox - Security Policy & Compliance
+# 🔐 OpenBox Security Policy
 
-## 📋 Overview
-OpenBox implements defense-in-depth security with multi-layer protection.
+## Access Control
+- **Single Connection**: Only one session per user
+- **IP Whitelisting**: Only approved IPs can connect
+- **Device Registration**: Only registered devices allowed
+- **2FA Required**: All users must use 2FA
+- **YubiKey**: Super Admin requires YubiKey
 
-## 🛡️ Security Layers
+## User Hierarchy
+### Super Admin
+- Full access to all features
+- YubiKey + 2FA required
+- Emergency backup access
+- Can create/delete users
+- Full system configuration
 
-### 1. Authentication & Authorization
-- **Super Admin**: YubiKey + 2FA required
-- **Sub Admins**: 2FA required
-- **API Access**: Token-based with IP whitelisting
-- **SSH**: Ed25519 keys only (no passwords)
+### Sub Admin
+- Limited access
+- 2FA required
+- Storage access only
+- File management only
+- View logs only
 
-### 2. Network Security
-- **IP Whitelisting**: Only authorized IPs can access
-- **Rate Limiting**: 100 requests/minute max
-- **DDoS Protection**: Cloudflare + Northflank WAF
-- **TLS 1.3**: Mandatory for all connections
+## Security Rules
+1. IP whitelist enforced
+2. Device registration required
+3. Single connection limit
+4. Session timeout: 15 minutes
+5. Max login attempts: 5
+6. Lockout duration: 15 minutes
 
-### 3. Application Security
-- **Input Validation**: All inputs sanitized
-- **SQL Injection Protection**: Parameterized queries
-- **XSS Prevention**: Content Security Policy
-- **CSRF Protection**: Tokens required
+## Emergency Access
+- Super Admin has emergency backup access
+- SSH keys allow recovery access
+- Emergency contact: admin@openbox.host
 
-### 4. Data Security
-- **Encryption at Rest**: AES-256
-- **Encryption in Transit**: TLS 1.3
-- **Backup Encryption**: GPG encrypted
-- **Secure Deletion**: Shred before delete
-
-### 5. Monitoring & Alerting
-- **Real-time Monitoring**: 24/7
-- **Intrusion Detection**: Fail2ban + OSSEC
-- **Malware Scanning**: ClamAV + Trivy
-- **Security Alerts**: Email + Telegram
-
-### 6. Access Control
-- **Single Connection Limit**: Per remote
-- **Session Timeout**: 15 minutes
-- **Concurrent Sessions**: 1 max
-- **Login Attempts**: 5 before lockout
-
-## ✅ Security Checklist
-- [x] YubiKey + 2FA
-- [x] SSH Ed25519 keys
-- [x] IP Whitelisting
-- [x] Rate Limiting
-- [x] TLS 1.3
-- [x] Data Encryption
-- [x] Real-time Monitoring
-- [x] Intrusion Detection
-- [x] Malware Scanning
-- [x] Secure Backups
-- [x] Audit Logging
-- [x] Single Connection Limit
-
-## 🔒 Security Contacts
-- **Security Team**: security@openbox.host
-- **Super Admin**: admin@openbox.host
-- **Emergency**: +1-800-OPENBOX
-
-## 📊 Compliance
-- **GDPR**: Compliant
-- **SOC2**: Ready
-- **HIPAA**: Ready (if needed)
-- **ISO 27001**: In progress
-
----
-**Last Updated**: July 2026
-**Security Level**: Maximum
+## Reporting
+Report vulnerabilities: security@openbox.host

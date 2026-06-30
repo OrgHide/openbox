@@ -1,0 +1,28 @@
+# OpenBox Code Owners
+# These users will be automatically requested for review
+
+# Global owners
+* @OrgHide/admin
+
+# Security sensitive files
+configs/                     @OrgHide/admin
+scripts/                     @OrgHide/admin
+.github/workflows/           @OrgHide/admin
+deploy/                      @OrgHide/admin
+
+# Documentation
+*.md                         @OrgHide/admin
+README.md                    @OrgHide/admin
+SECURITY.md                  @OrgHide/admin
+
+# Core configuration
+configs/rclone/              @OrgHide/admin
+configs/alist/               @OrgHide/admin
+
+# Docker/Deployment
+Dockerfile                   @OrgHide/admin
+docker-compose.yml           @OrgHide/admin
+deploy/northflank.json       @OrgHide/admin
+
+# Infrastructure
+.github/                     @OrgHide/admin

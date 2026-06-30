@@ -1,16 +1,74 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    labels:
-      - "security"
-      - "dependencies"
+  # Python dependencies
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "daily"
+      time: "06:00"
+      timezone: "UTC"
+    target-branch: "main"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+    labels:
+      - "dependencies"
+      - "security"
+    reviewers:
+      - "@OrgHide/admin"
+    assignees:
+      - "@OrgHide/admin"
+    groups:
+      python-packages:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    open-pull-requests-limit: 10
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "06:00"
+      timezone: "UTC"
+    target-branch: "main"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "ci"
+      - "dependencies"
+    reviewers:
+      - "@OrgHide/admin"
+
+  # Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "06:00"
+      timezone: "UTC"
+    target-branch: "main"
+    labels:
+      - "docker"
+      - "dependencies"
+    reviewers:
+      - "@OrgHide/admin"
+
+  # Security updates
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    time: "06:00"
+    open-pull-requests-limit: 10
     labels:
       - "security"
-      - "dependencies"
+      - "critical"
+    allow:
+      - dependency-type: "all"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]

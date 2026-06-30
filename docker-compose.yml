@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # OpenBox WebUI (Alist/OpenList)
+  openlist:
+    image: ghcr.io/openlistteam/openlist:latest
+    container_name: openbox-webui
+    restart: unless-stopped
+    ports:
+      - "5244:5244"
+      - "5245:5245"
+    volumes:
+      - ./configs/openlist:/app/config
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - OPENLIST_CONFIG=/app/config/config.json
+      - TZ=UTC
+    networks:
+      - openbox-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5244/api/public/settings"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # WebDAV Server
+  webdav:
+    image: rclone/rclone:latest
+    container_name: openbox-webdav
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./configs/rclone:/config/rclone
+      - ./data:/data
+    command: |
+      serve webdav openbox:/
+      --addr 0.0.0.0:8080
+      --user admin
+      --pass MasterPassword
+      --read-only=false
+      --vfs-cache-mode writes
+      --vfs-cache-max-age 1h
+      --vfs-cache-max-size 1G
+      --dir-cache-time 5m
+      --poll-interval 1m
+    environment:
+      - RCLONE_CONFIG=/config/rclone/rclone.conf
+    networks:
+      - openbox-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SSH Server
+  ssh:
+    image: linuxserver/openssh-server:latest
+    container_name: openbox-ssh
+    restart: unless-stopped
+    ports:
+      - "8022:2222"
+    volumes:
+      - ./deploy/ssh-keys:/config/keys
+    environment:
+      - USER_NAME=admin
+      - USER_PASSWORD=MasterPassword
+      - SUDO_ACCESS=true
+    networks:
+      - openbox-network
+
+networks:
+  openbox-network:
+    driver: bridge

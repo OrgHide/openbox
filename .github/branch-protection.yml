@@ -1,0 +1,37 @@
+# OpenBox Branch Protection Rules
+# Apply via GitHub UI or GitHub CLI
+
+branches:
+  main:
+    protection:
+      # Require pull request reviews
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+      
+      # Require status checks
+      required_status_checks:
+        strict: true
+        contexts:
+          - "security-scan"
+          - "deploy"
+      
+      # Require up-to-date branches
+      enforce_admins: true
+      required_linear_history: true
+      
+      # Restrictions
+      restrictions:
+        apps: []
+        users: []
+        teams: ["admin"]
+      
+      # Require signed commits
+      require_signed_commits: true
+      
+      # Allow force pushes
+      allow_force_pushes: false
+      
+      # Allow deletions
+      allow_deletions: false

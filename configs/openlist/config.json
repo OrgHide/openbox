@@ -1,0 +1,43 @@
+{
+  "name": "OpenBox",
+  "description": "Unified Storage Warehouse - Android A5",
+  "version": "2.0.0",
+  "address": "0.0.0.0",
+  "port": 5244,
+  "database": {
+    "type": "sqlite3",
+    "db_file": "/data/openbox/data/alist.db"
+  },
+  "temp_dir": "/data/openbox/tmp",
+  "cache": {
+    "expiration": 60,
+    "cleanup_interval": 120
+  },
+  "log": {
+    "enable": true,
+    "name": "/data/openbox/logs/openlist.log",
+    "max_size": 100,
+    "max_backups": 10,
+    "max_age": 30,
+    "compress": true
+  },
+  "mcp": {
+    "enable": true,
+    "port": 5245
+  },
+  "security": {
+    "yubikey": true,
+    "2fa": true,
+    "session_timeout": 3600,
+    "max_login_attempts": 5,
+    "lockout_duration": 900
+  },
+  "storage": {
+    "webdav": {
+      "enabled": true,
+      "endpoint": "http://localhost:8080",
+      "username": "admin",
+      "password": "MasterPassword"
+    }
+  }
+}

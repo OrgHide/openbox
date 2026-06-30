@@ -1,0 +1,89 @@
+name: Deploy to Northflank
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily backup
+
+env:
+  DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+  NORTHFLANK_TOKEN: ${{ secrets.NORTHFLANK_TOKEN }}
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Security audit
+        run: |
+          echo "🔍 Running security checks..."
+          # Check for secrets in code
+          if grep -r "password\|secret\|token" . --exclude-dir=.git; then
+            echo "⚠️ Potential secrets found in code!"
+          fi
+          
+  deploy:
+    needs: security-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      
+      - name: Deploy to Northflank
+        run: |
+          echo "🚀 Deploying to Northflank..."
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.NORTHFLANK_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"service": "warehouse", "version": "'"${{ github.sha }}"'"}' \
+            https://api.northflank.com/v1/deploy
+      
+      - name: Deploy configuration
+        run: |
+          echo "📝 Deploying configuration..."
+          # Deploy rclone config
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            configs/rclone.conf deploy@northflank:/etc/rclone/
+          
+          # Deploy scripts
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            scripts/*.sh deploy@northflank:/usr/local/bin/
+      
+      - name: Run backup
+        if: github.event_name == 'schedule'
+        run: |
+          echo "💾 Running scheduled backup..."
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            deploy@northflank "~/backup_system.sh"
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          security-checks: vuln,config,secret
+
+  dependabot-auto-merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dependabot/fetch-metadata@v1
+      - name: Auto-merge dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

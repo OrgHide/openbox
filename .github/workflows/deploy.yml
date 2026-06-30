@@ -1,0 +1,104 @@
+name: Deploy OpenBox to Northflank
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+env:
+  NORTHFLANK_TOKEN: ${{ secrets.NORTHFLANK_TOKEN }}
+  DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          security-checks: vuln,config,secret
+
+  deploy:
+    needs: security-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Deploy to Northflank
+        run: |
+          echo "🚀 Deploying to Northflank..."
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.NORTHFLANK_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "service": "openbox",
+              "version": "${{ github.sha }}",
+              "environment": {
+                "DEPLOY_TIME": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
+                "GIT_COMMIT": "${{ github.sha }}"
+              }
+            }' \
+            https://api.northflank.com/v1/deploy
+
+      - name: Deploy configuration
+        run: |
+          echo "📝 Deploying configuration..."
+          scp -i ~/.ssh/id_ed25519 \
+              -o StrictHostKeyChecking=no \
+              configs/rclone/rclone.conf \
+              deploy@northflank:/etc/openbox/rclone.conf
+
+          scp -i ~/.ssh/id_ed25519 \
+              -o StrictHostKeyChecking=no \
+              configs/alist/config.json \
+              deploy@northflank:/etc/openbox/alist.json
+
+      - name: Restart services
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -o StrictHostKeyChecking=no \
+              deploy@northflank \
+              "systemctl restart openbox-webdav && systemctl restart openbox-alist"
+
+      - name: Verify deployment
+        run: |
+          echo "🔍 Verifying deployment..."
+          curl -f https://openbox.northflank.com/api/public/settings || exit 1
+          curl -f https://openbox.northflank.com:8080/ || exit 1
+          echo "✅ Deployment verified!"
+
+  backup:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run backup
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              -o StrictHostKeyChecking=no \
+              deploy@northflank \
+              "~/openbox/scripts/backup.sh"
+
+  dependabot-auto-merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dependabot/fetch-metadata@v1
+      - name: Auto-merge dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

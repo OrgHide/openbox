@@ -1,0 +1,61 @@
+# Security - NEVER commit these!
+*.key
+*.pem
+*.pub
+*.secret
+*.token
+*.crt
+*.csr
+deploy/*-deploy-key*
+deploy/*-deploy-key.pub
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+.tmp/
+tmp/
+*.temp
+
+# Cache
+.cache/
+cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.desktop.ini
+
+# Backup
+*.backup
+backups/
+*.bak
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Config with secrets
+configs/alist/data/
+configs/rclone/rclone.conf
+!configs/rclone/rclone.conf.example

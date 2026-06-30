@@ -1,0 +1,27 @@
+[Unit]
+Description=OpenBox WebDAV Server
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/opt/openbox
+ExecStart=/usr/local/bin/rclone serve webdav openbox:/ \
+    --addr 0.0.0.0:8080 \
+    --user admin \
+    --pass MasterPassword \
+    --read-only=false \
+    --vfs-cache-mode writes \
+    --vfs-cache-max-age 1h \
+    --vfs-cache-max-size 1G \
+    --dir-cache-time 5m \
+    --poll-interval 1m
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=RCLONE_CONFIG=/etc/openbox/rclone.conf
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+{
+  "address": "127.0.0.1",
+  "port": 5244,
+  "database": {
+    "type": "sqlite3",
+    "db_file": "data/alist.db"
+  },
+  "temp_dir": "/data/data/com.termux/files/home/.tmp",
+  "cache": {
+    "expiration": 60,
+    "cleanup_interval": 120
+  },
+  "log": {
+    "enable": true,
+    "name": "data/log/log.log"
+  },
+  "mcp": {
+    "enable": true,
+    "port": 5245
+  }
+}

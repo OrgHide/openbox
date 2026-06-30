@@ -1,0 +1,64 @@
+{
+  "name": "openbox-storage",
+  "type": "service",
+  "region": "us-east-1",
+  "scale": {
+    "replicas": 1,
+    "memory": "2048Mi",
+    "cpu": "1000m"
+  },
+  "environment": {
+    "RCLONE_CONFIG": "/etc/rclone/rclone.conf",
+    "ALIST_PORT": "5244",
+    "WEBDAV_PORT": "8080",
+    "SSH_PORT": "8022",
+    "SECURITY_LEVEL": "maximum",
+    "ADMIN_USER": "admin",
+    "ADMIN_PASSWORD": "MasterPassword"
+  },
+  "healthchecks": {
+    "webui": {
+      "path": "/api/public/settings",
+      "port": 5244,
+      "interval": 30,
+      "timeout": 5
+    },
+    "webdav": {
+      "path": "/",
+      "port": 8080,
+      "interval": 30,
+      "timeout": 5
+    }
+  },
+  "logging": {
+    "level": "info",
+    "retention": "30d",
+    "audit": true
+  },
+  "security": {
+    "yubikey": true,
+    "2fa": true,
+    "ssh_keys": true,
+    "single_connection": true,
+    "ip_whitelist": []
+  },
+  "volumes": {
+    "config": {
+      "mount_path": "/etc/openbox",
+      "size": "1Gi"
+    },
+    "data": {
+      "mount_path": "/data",
+      "size": "10Gi"
+    },
+    "logs": {
+      "mount_path": "/var/log/openbox",
+      "size": "1Gi"
+    }
+  },
+  "ssh": {
+    "enabled": true,
+    "port": 8022,
+    "authorized_keys": []
+  }
+}

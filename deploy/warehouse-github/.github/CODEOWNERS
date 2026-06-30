@@ -1,0 +1,7 @@
+# Global code owners
+* @admin
+
+# Security sensitive files
+configs/* @admin
+scripts/* @admin
+.github/workflows/* @admin

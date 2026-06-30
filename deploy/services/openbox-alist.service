@@ -1,0 +1,18 @@
+[Unit]
+Description=OpenBox Alist Server
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/opt/openbox
+ExecStart=/usr/local/bin/openlist server
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=ALIST_CONFIG=/etc/openbox/alist.json
+
+[Install]
+WantedBy=multi-user.target

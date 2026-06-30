@@ -1,0 +1,20 @@
+# OPENBOX - Example Configuration
+# Copy this to rclone.conf and add your tokens
+
+[gdrive1]
+type = drive
+scope = drive
+root_folder_id =
+
+[dropbox1]
+type = dropbox
+
+[onedrive1]
+type = onedrive
+
+[openbox]
+type = union
+upstreams = gdrive1:/ dropbox1:/ onedrive1:/
+create_policy = mfs
+search_policy = all
+action_policy = all

@@ -1,0 +1,33 @@
+{
+  "models": {
+    "free": [
+      "google/gemini-2.0-flash-lite-preview-02-05:free",
+      "mistralai/mistral-7b-instruct:free",
+      "meta-llama/llama-3.2-3b-instruct:free",
+      "microsoft/phi-3-mini-128k-instruct:free"
+    ],
+    "paid": [
+      "openai/gpt-4-turbo",
+      "anthropic/claude-3-opus",
+      "google/gemini-pro",
+      "meta-llama/llama-3-70b-instruct"
+    ]
+  },
+  "strategy": {
+    "primary": "free",
+    "fallback": "paid",
+    "auto_rotate": true,
+    "rotation_interval": "daily"
+  },
+  "capabilities": {
+    "organize": true,
+    "backup": true,
+    "sync": true,
+    "validate": true,
+    "search": true,
+    "analyze": true,
+    "categorize": true,
+    "summarize": true
+  },
+  "system_prompt": "You are OpenBox AI Assistant. Help users organize, backup, sync, and manage their multi-cloud storage warehouse. Provide concise, actionable advice. Security first, privacy always."
+}

@@ -1,21 +1,31 @@
 #!/bin/bash
-echo "🚀 Deploying OpenBox to Northflank"
+echo "🚀 Deploying OpenBox to Northflank..."
 echo "========================================"
 
-# Load Northflank token
+# Set variables
 export NORTHFLANK_TOKEN="${NORTHFLANK_TOKEN:-}"
+export DEPLOY_KEY="${DEPLOY_KEY:-}"
+
 if [ -z "$NORTHFLANK_TOKEN" ]; then
     echo "❌ NORTHFLANK_TOKEN not set!"
     echo "Please set: export NORTHFLANK_TOKEN=your_token"
     exit 1
 fi
 
-# Deploy to Northflank
-echo "📦 Deploying service..."
+# Deploy
 curl -X POST \
     -H "Authorization: Bearer $NORTHFLANK_TOKEN" \
     -H "Content-Type: application/json" \
-    -d @~/openbox/deploy/northflank.json \
+    -d '{
+        "service": "openbox",
+        "version": "'$(git rev-parse HEAD)'",
+        "environment": {
+            "DEPLOY_TIME": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
+            "GIT_COMMIT": "'$(git rev-parse HEAD)'",
+            "OPENBOX_VERSION": "2.0.0",
+            "SECURITY_LEVEL": "maximum"
+        }
+    }' \
     https://api.northflank.com/v1/deploy
 
 echo ""

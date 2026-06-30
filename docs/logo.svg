@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="40" fill="#1a1a2e"/>
+  <rect x="20" y="20" width="160" height="160" rx="30" fill="none" stroke="#00d4ff" stroke-width="3"/>
+  <path d="M100 40 L140 70 L140 130 L100 160 L60 130 L60 70 Z" fill="none" stroke="#00d4ff" stroke-width="3"/>
+  <path d="M100 40 L100 160" stroke="#00d4ff" stroke-width="2"/>
+  <path d="M60 70 L140 70" stroke="#00d4ff" stroke-width="2"/>
+  <path d="M60 130 L140 130" stroke="#00d4ff" stroke-width="2"/>
+  <text x="100" y="110" text-anchor="middle" fill="#00d4ff" font-family="Arial" font-weight="bold" font-size="24">OB</text>
+  <text x="100" y="175" text-anchor="middle" fill="#00d4ff" font-family="Arial" font-size="12">OpenBox</text>
+</svg>

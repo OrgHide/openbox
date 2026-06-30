@@ -1,33 +1,88 @@
-name: Deploy OpenBox to Northflank
+name: 🚀 OpenBox CI/CD Pipeline
 
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  pull_request:
+    branches: [ main ]
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 2 * * *'  # Daily backup at 2 AM
   workflow_dispatch:
 
 env:
   NORTHFLANK_TOKEN: ${{ secrets.NORTHFLANK_TOKEN }}
   DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+  OPENBOX_VERSION: "2.0.0"
 
 jobs:
+  # ==========================================
+  # 1. SECURITY SCAN
+  # ==========================================
   security-scan:
+    name: 🔒 Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Run security scan
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           scan-ref: .
           security-checks: vuln,config,secret
+          format: sarif
+          output: trivy-results.sarif
 
-  deploy:
-    needs: security-scan
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Secret scanning
+        run: |
+          echo "🔍 Scanning for secrets..."
+          if grep -r "password\|secret\|token\|key" . --exclude-dir=.git --exclude-dir=.github | grep -v "\.md$"; then
+            echo "⚠️ Potential secrets found in code!"
+            exit 1
+          fi
+          echo "✅ No secrets found"
+
+  # ==========================================
+  # 2. CODE QUALITY
+  # ==========================================
+  code-quality:
+    name: 📊 Code Quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: error
+
+      - name: YAML Lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+
+  # ==========================================
+  # 3. DEPLOY TO NORTHFLANK
+  # ==========================================
+  deploy:
+    name: 🚀 Deploy to Northflank
+    needs: [security-scan, code-quality]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup SSH
         run: |
@@ -38,7 +93,9 @@ jobs:
 
       - name: Deploy to Northflank
         run: |
-          echo "🚀 Deploying to Northflank..."
+          echo "🚀 Deploying OpenBox v${{ env.OPENBOX_VERSION }} to Northflank..."
+          
+          # Deploy configuration
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.NORTHFLANK_TOKEN }}" \
             -H "Content-Type: application/json" \
@@ -47,12 +104,13 @@ jobs:
               "version": "${{ github.sha }}",
               "environment": {
                 "DEPLOY_TIME": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
-                "GIT_COMMIT": "${{ github.sha }}"
+                "GIT_COMMIT": "${{ github.sha }}",
+                "OPENBOX_VERSION": "${{ env.OPENBOX_VERSION }}"
               }
             }' \
             https://api.northflank.com/v1/deploy
 
-      - name: Deploy configuration
+      - name: Deploy configuration files
         run: |
           echo "📝 Deploying configuration..."
           scp -i ~/.ssh/id_ed25519 \
@@ -67,6 +125,7 @@ jobs:
 
       - name: Restart services
         run: |
+          echo "🔄 Restarting services..."
           ssh -i ~/.ssh/id_ed25519 \
               -o StrictHostKeyChecking=no \
               deploy@northflank \
@@ -75,30 +134,60 @@ jobs:
       - name: Verify deployment
         run: |
           echo "🔍 Verifying deployment..."
+          sleep 10
           curl -f https://openbox.northflank.com/api/public/settings || exit 1
           curl -f https://openbox.northflank.com:8080/ || exit 1
           echo "✅ Deployment verified!"
 
+  # ==========================================
+  # 4. BACKUP
+  # ==========================================
   backup:
-    if: github.event_name == 'schedule'
+    name: 💾 Daily Backup
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    needs: deploy
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
       - name: Run backup
         run: |
+          echo "💾 Starting daily backup..."
           ssh -i ~/.ssh/id_ed25519 \
               -o StrictHostKeyChecking=no \
               deploy@northflank \
               "~/openbox/scripts/backup.sh"
 
+          echo "✅ Backup completed!"
+
+  # ==========================================
+  # 5. DEPENDABOT AUTO-MERGE
+  # ==========================================
   dependabot-auto-merge:
+    name: 🤖 Dependabot Auto-Merge
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
-      - uses: actions/checkout@v4
-      - uses: dependabot/fetch-metadata@v1
-      - name: Auto-merge dependabot PRs
-        run: gh pr merge --auto --merge "$PR_URL"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch Dependabot metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge Dependabot PRs
+        run: |
+          gh pr merge --auto --merge "$PR_URL"
+          gh pr review "$PR_URL" --approve
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

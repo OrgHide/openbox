@@ -16,16 +16,13 @@ RUN apk add --no-cache \
     libc6-compat \
     && rm -rf /var/cache/apk/*
 
-# Download OpenList ARM64 binary
+# Download clean OpenList binary
 RUN wget -q -O /tmp/alist.tar.gz \
-    "https://github.com/alist-org/alist/releases/latest/download/alist-linux-arm64.tar.gz" && \
+    "https://github.com/alist-org/alist/releases/download/v3.40.0/alist-linux-arm64.tar.gz" && \
     tar -xzf /tmp/alist.tar.gz -C /usr/local/bin/ && \
     chmod +x /usr/local/bin/alist && \
     ln -sf /usr/local/bin/alist /usr/local/bin/openlist && \
     rm /tmp/alist.tar.gz
-
-# Verify binary works
-RUN /usr/local/bin/alist --version || echo "Binary check"
 
 # Create openbox user and directories
 RUN adduser -D -h /opt/openbox openbox && \
@@ -48,7 +45,7 @@ ENV ALIST_PORT=2232
 ENV OPENLIST_PORT=2232
 
 # Expose ports
-EXPOSE 2232 5244
+EXPOSE 2232
 
-# Start OpenBox
+# Start OpenBox with admin password set
 CMD ["/opt/openbox/scripts/start.sh"]

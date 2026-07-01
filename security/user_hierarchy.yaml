@@ -1,18 +1,23 @@
-# OpenBox User Hierarchy - Maximum Security
-# Super Admin: Full access, YubiKey + Tailscale required
-# Sub Admin: Limited access, Tailscale + 2FA required
+# ==========================================
+# OPENBOX USER HIERARCHY - MAXIMUM SECURITY
+# ==========================================
 
 super_admin:
-  username: admin
-  full_name: Charles Tanauan (Master Kanor)
+  # Super Admin - Emergency Access Only
+  username: OpenClose
+  display_name: Charles Tanauan (Master Kanor)
   role: Super Admin
-  access: full
-  tailscale_required: true
+  access_level: full_emergency
+  
+  # Authentication
   auth:
     yubikey: true
     two_factor: true
     ssh_keys: true
     tailscale: true
+    password: Openpassword
+  
+  # Permissions - Full Access
   permissions:
     - all_storages
     - user_management
@@ -20,32 +25,141 @@ super_admin:
     - security_policy
     - backup_restore
     - audit_logs
+    - delete_any
+    - modify_any
+    - emergency_access
+    - lockdown_mode
+    - revoke_access
+    - full_system_control
+  
+  # Security Rules
+  security:
+    emergency_only: true
+    lockdown_override: true
+    backup_access: true
+    full_system_restore: true
+    audit_override: true
+    session_timeout: 900  # 15 minutes
+    max_login_attempts: 3
+    lockout_duration: 3600  # 1 hour
+  
+  # Devices
   devices:
     - MASTER-KANOR-PHONE
     - MASTER-KANOR-LAPTOP
+    - MASTER-KANOR-TABLET
+  
+  # Emergency Contacts
+  emergency_contact: admin@openbox.host
+  backup_phone: +1-800-OPENBOX
+  
+  # Status
+  status: active
   emergency_access: true
   backup_admin: true
+  created: 2026-07-01
+  last_login: 2026-07-01
 
 sub_admin:
-  username: subadmin
-  full_name: Team Member
+  # Sub-Admin - Daily Operations
+  username: Opendev
+  display_name: hoopstreet (Xenia Xu)
   role: Sub Admin
-  access: limited
-  tailscale_required: true
+  access_level: limited_daily
+  
+  # Authentication
   auth:
     yubikey: false
     two_factor: true
-    ssh_keys: false
+    ssh_keys: true
     tailscale: true
+    password: Masterdev
+  
+  # Permissions - Limited Access
   permissions:
     - storage_access
     - file_management
     - view_logs
     - create_shares
+    - read_only_operations
+    - daily_business_ops
+    - developer_access
+    - personal_management
+  
+  # Restricted - High Risk Operations
+  restricted:
+    - delete_recyclebin: false
+    - delete_super_admin: false
+    - delete_entire_space: false
+    - modify_system: false
+    - security_changes: false
+    - user_deletion: false
+  
+  # Security Rules
+  security:
+    read_only_high_risk: true
+    no_recyclebin_deletion: true
+    no_super_admin_modification: true
+    session_timeout: 3600  # 1 hour
+    max_login_attempts: 5
+    lockout_duration: 900  # 15 minutes
+  
+  # Devices
   devices:
-    - SUB-ADMIN-PHONE
-    - SUB-ADMIN-LAPTOP
+    - HOOPSTREET-PHONE
+    - HOOPSTREET-LAPTOP
+    - HOOPSTREET-DEV
+  
+  # Roles
+  roles:
+    - developer
+    - business_manager
+    - personal_user
+  
+  # Status
+  status: active
   emergency_access: false
   backup_admin: false
+  created: 2026-07-01
+  last_login: 2026-07-01
 
-# Add more users below
+# Security Policies
+security_policies:
+  # Recycle Bin Protection
+  recycle_bin:
+    enabled: true
+    retention_days: 30
+    requires_super_admin_for_deletion: true
+    prevent_permanent_delete: true
+  
+  # Super Admin Protection
+  super_admin_protection:
+    require_yubikey: true
+    require_2fa: true
+    require_tailscale: true
+    require_ssh_key: true
+    audit_all_actions: true
+    notify_on_access: true
+  
+  # High Risk Operations
+  high_risk_operations:
+    - delete_entire_space
+    - delete_super_admin
+    - modify_system_config
+    - change_security_policy
+    - modify_user_roles
+  
+  # Read-Only Protection
+  read_only_protection:
+    enabled: true
+    apply_to_sub_admin: true
+    preserve_audit_trail: true
+
+# Audit Settings
+audit:
+  log_all_actions: true
+  log_auth_attempts: true
+  log_sudo_commands: true
+  retention_days: 90
+  alert_on_suspicious: true
+  notify_super_admin_on_high_risk: true

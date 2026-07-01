@@ -8,10 +8,10 @@ if ! tailscale status 2>/dev/null | grep -q "active"; then
     sleep 2
 fi
 
-# Enforce security first
+# Enforce security
 ~/openbox/scripts/enforce_security.sh || exit 1
 
-# Start OpenBox on port 2232 (single port)
+# Start OpenBox on port 2232
 export ALIST_PORT=2232
 export OPENLIST_PORT=2232
 
@@ -27,13 +27,25 @@ sleep 3
 # Get Tailscale IP
 TAILSCALE_IP=$(tailscale ip 2>/dev/null)
 
+echo ""
 echo "✅ OpenBox running securely!"
-echo "🔗 Access via Tailscale: http://$TAILSCALE_IP:2232"
-echo "👤 Username: admin"
-echo "🔑 Password: MasterPassword"
+echo ""
+echo "👑 SUPER ADMIN ACCESS:"
+echo "   URL: http://$TAILSCALE_IP:2232"
+echo "   Username: OpenClose"
+echo "   Password: Openpassword"
+echo "   🔐 YubiKey + 2FA required"
+echo "   🚨 Emergency access only"
+echo ""
+echo "👤 SUB-ADMIN ACCESS:"
+echo "   URL: http://$TAILSCALE_IP:2232"
+echo "   Username: Opendev"
+echo "   Password: Masterdev"
+echo "   🔒 2FA required"
+echo "   📝 Daily business & development"
 echo ""
 echo "📊 Active connections:"
 ss -tuln | grep -E ':(2232|5245|8022)' || echo "No connections"
 
 # Log access
-echo "$(date) - OpenBox started - Tailscale IP: $TAILSCALE_IP" >> ~/openbox/logs/access.log
+echo "$(date) - OpenBox started - Super Admin: OpenClose, Sub-Admin: Opendev" >> ~/openbox/logs/access.log

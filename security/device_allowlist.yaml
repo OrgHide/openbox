@@ -1,0 +1,42 @@
+# OpenBox Device Allowlist
+# Only these devices can connect
+# Format: DEVICE_ID|DEVICE_NAME|USER|TAILSCALE_IP|FINGERPRINT|REGISTERED_DATE
+
+super_admin_devices:
+  - device_id: "MASTER-KANOR-PHONE"
+    device_name: "Android A5"
+    user: "superadmin"
+    tailscale_ip: "100.x.x.1"
+    fingerprint: "FINGERPRINT_1"
+    registered: "2026-07-01"
+    status: "active"
+  
+  - device_id: "MASTER-KANOR-LAPTOP"
+    device_name: "Dell XPS"
+    user: "superadmin"
+    tailscale_ip: "100.x.x.2"
+    fingerprint: "FINGERPRINT_2"
+    registered: "2026-07-01"
+    status: "active"
+
+sub_admin_devices:
+  - device_id: "SUB-ADMIN-PHONE"
+    device_name: "iPhone 15"
+    user: "subadmin"
+    tailscale_ip: "100.x.x.3"
+    fingerprint: "FINGERPRINT_3"
+    registered: "2026-07-01"
+    status: "active"
+  
+  - device_id: "SUB-ADMIN-LAPTOP"
+    device_name: "MacBook Pro"
+    user: "subadmin"
+    tailscale_ip: "100.x.x.4"
+    fingerprint: "FINGERPRINT_4"
+    registered: "2026-07-01"
+    status: "active"
+
+# Device approval is required for new devices
+device_approval_required: true
+auto_revoke_on_compromise: true
+revoke_unknown_devices: true

@@ -1,16 +1,18 @@
-# OpenBox User Hierarchy
-# Super Admin: Full access, YubiKey + 2FA required
-# Sub Admin: Limited access, 2FA required
+# OpenBox User Hierarchy - Maximum Security
+# Super Admin: Full access, YubiKey + Tailscale required
+# Sub Admin: Limited access, Tailscale + 2FA required
 
 super_admin:
   username: admin
   full_name: Charles Tanauan (Master Kanor)
   role: Super Admin
   access: full
+  tailscale_required: true
   auth:
     yubikey: true
     two_factor: true
     ssh_keys: true
+    tailscale: true
   permissions:
     - all_storages
     - user_management
@@ -29,10 +31,12 @@ sub_admin:
   full_name: Team Member
   role: Sub Admin
   access: limited
+  tailscale_required: true
   auth:
     yubikey: false
     two_factor: true
     ssh_keys: false
+    tailscale: true
   permissions:
     - storage_access
     - file_management

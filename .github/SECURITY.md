@@ -1,38 +1,37 @@
-# 🔐 OpenBox Security Policy
+# 🔐 OpenBox Security Policy - Maximum Security
+
+## Network Security
+- **Tailscale Required**: All connections must go through Tailscale
+- **Single Port**: Only port 2232 exposed
+- **Private IP**: All traffic uses Tailscale's private network
+- **No Public IP**: No public internet exposure
+
+## Device Security
+- **Device Allowlist**: Only approved devices can connect
+- **Device Fingerprinting**: Unique device identification
+- **MAC Binding**: Device MAC address validation
+- **Clone Detection**: Blocks duplicate devices
 
 ## Access Control
-- **Single Connection**: Only one session per user
-- **IP Whitelisting**: Only approved IPs can connect
-- **Device Registration**: Only registered devices allowed
-- **2FA Required**: All users must use 2FA
-- **YubiKey**: Super Admin requires YubiKey
+- **Super Admin**: Emergency access only (YubiKey + Tailscale)
+- **Sub Admin**: Daily operations (2FA + Tailscale)
+- **Role-Based Access**: Granular permissions
+- **Single Connection**: One session per user
 
-## User Hierarchy
-### Super Admin
-- Full access to all features
-- YubiKey + 2FA required
-- Emergency backup access
-- Can create/delete users
-- Full system configuration
-
-### Sub Admin
-- Limited access
-- 2FA required
-- Storage access only
-- File management only
-- View logs only
-
-## Security Rules
-1. IP whitelist enforced
-2. Device registration required
-3. Single connection limit
-4. Session timeout: 15 minutes
-5. Max login attempts: 5
-6. Lockout duration: 15 minutes
+## Security Features
+- ✅ Tailscale VPN required
+- ✅ Single port (2232) only
+- ✅ Device fingerprinting
+- ✅ MAC binding
+- ✅ Clone detection
+- ✅ IP allowlist
+- ✅ Auto-revoke on compromise
+- ✅ Super Admin emergency access
+- ✅ Role-based access control
 
 ## Emergency Access
 - Super Admin has emergency backup access
-- SSH keys allow recovery access
+- YubiKey + Tailscale required
 - Emergency contact: admin@openbox.host
 
 ## Reporting

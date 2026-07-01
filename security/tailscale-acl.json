@@ -3,7 +3,7 @@
     {
       "action": "accept",
       "src": ["tag:super-admin"],
-      "dst": ["tag:openbox:*", "tag:sub-admin:*"]
+      "dst": ["tag:openbox:2232"]
     },
     {
       "action": "accept",
@@ -12,8 +12,8 @@
     },
     {
       "action": "accept",
-      "src": ["tag:openbox"],
-      "dst": ["tag:openbox:*"]
+      "src": ["autogroup:members"],
+      "dst": ["tag:openbox:2232"]
     }
   ],
   "tagOwners": {
@@ -26,6 +26,6 @@
     "group:sub-admins": ["Opendev"]
   },
   "hosts": {
-    "openbox-northflank": "100.104.142.38"
+    "openbox": "100.104.142.38"
   }
 }

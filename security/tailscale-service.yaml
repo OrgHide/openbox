@@ -1,21 +1,21 @@
 # Tailscale Service Definition for OpenBox
+# SINGLE PORT: 2232 HTTP ONLY
 service:
   name: openbox
-  description: OpenBox Storage Warehouse
+  description: OpenBox Storage Warehouse - Single Port 2232
   tailnet: master-kanor.github
   ports:
-    - protocol: tcp
+    - protocol: http
       port: 2232
-      description: OpenBox WebUI
-    - protocol: tcp
-      port: 5244
-      description: OpenBox Internal
-    - protocol: tcp
-      port: 8022
-      description: SSH Access
+      description: OpenBox WebUI (Single Port)
   tags:
     - tag:openbox
     - tag:storage
+    - tag:single-port
   acl:
     - tag:super-admin
     - tag:sub-admin
+  security:
+    single_connection: true
+    rate_limit: "1 per 10s"
+    session_timeout: 900

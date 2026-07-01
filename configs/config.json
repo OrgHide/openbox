@@ -20,7 +20,7 @@
     "port": 5245
   },
   "site_title": "OpenBox",
-  "announcement": "Welcome to OpenBox - Secure Storage Warehouse",
+  "announcement": "Welcome to OpenBox - Single Port 2232",
   "name": "OpenBox",
   "brand": "OpenBox",
   "version": "2.0.0",
@@ -28,9 +28,11 @@
     "yubikey": true,
     "2fa": true,
     "session_timeout": 900,
-    "max_login_attempts": 10,
-    "lockout_duration": 300,
+    "max_login_attempts": 3,
+    "lockout_duration": 900,
     "passkey_enabled": true,
-    "single_connection": true
+    "single_connection": true,
+    "single_port": true,
+    "rate_limit": "1 per 10s"
   }
 }

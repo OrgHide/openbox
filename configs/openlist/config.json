@@ -1,46 +1,146 @@
 {
-  "name": "OpenBox",
-  "title": "OpenBox - Unified Storage Warehouse",
-  "brand": "OpenBox",
-  "version": "2.0.0",
-  "description": "Enterprise-grade multi-cloud storage warehouse",
-  "address": "0.0.0.0",
-  "port": 2232,
-  "site_title": "OpenBox",
-  "announcement": "Welcome to OpenBox - Secure Storage Warehouse",
+  "force": false,
+  "site_url": "",
+  "cdn": "",
+  "jwt_secret": "kDVNh6STZWtzD84C",
+  "token_expires_in": 48,
   "database": {
     "type": "sqlite3",
-    "db_file": "/data/openbox/data/openbox.db"
+    "host": "",
+    "port": 0,
+    "user": "",
+    "password": "",
+    "name": "",
+    "db_file": "/data/data/com.termux/files/home/openbox/data/openbox.db",
+    "table_prefix": "x_",
+    "ssl_mode": "",
+    "dsn": ""
   },
-  "temp_dir": "/data/openbox/tmp",
-  "cache": {
-    "expiration": 60,
-    "cleanup_interval": 120
+  "meilisearch": {
+    "host": "http://localhost:7700",
+    "api_key": "",
+    "index": "openlist"
   },
+  "scheme": {
+    "address": "0.0.0.0",
+    "http_port": 5244,
+    "https_port": -1,
+    "force_https": false,
+    "cert_file": "",
+    "key_file": "",
+    "unix_file": "",
+    "unix_file_perm": "",
+    "enable_h2c": false,
+    "enable_h3": false
+  },
+  "temp_dir": "/data/data/com.termux/files/home/openbox/tmp",
+  "bleve_dir": "data/bleve",
+  "dist_dir": "",
   "log": {
     "enable": true,
-    "name": "/data/openbox/logs/openbox.log"
+    "name": "/data/data/com.termux/files/home/openbox/logs/openbox.log",
+    "max_size": 50,
+    "max_backups": 30,
+    "max_age": 28,
+    "compress": false,
+    "filter": {
+      "enable": false,
+      "filters": [
+        {
+          "cidr": "",
+          "path": "/ping",
+          "method": ""
+        },
+        {
+          "cidr": "",
+          "path": "",
+          "method": "HEAD"
+        },
+        {
+          "cidr": "",
+          "path": "/dav/",
+          "method": "PROPFIND"
+        }
+      ]
+    }
   },
-  "mcp": {
-    "enable": true,
-    "port": 5245
+  "delayed_start": 0,
+  "auto_memory_limit": 4,
+  "min_free_memory": 0,
+  "max_block_limit": 0,
+  "max_connections": 0,
+  "max_concurrency": 64,
+  "tls_insecure_skip_verify": false,
+  "tasks": {
+    "download": {
+      "workers": 5,
+      "max_retry": 1,
+      "task_persistant": false
+    },
+    "transfer": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "upload": {
+      "workers": 5,
+      "max_retry": 0,
+      "task_persistant": false
+    },
+    "copy": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "move": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "decompress": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "decompress_upload": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "allow_retry_canceled": false
   },
-  "security": {
-    "yubikey": true,
-    "2fa": true,
-    "session_timeout": 3600,
-    "max_login_attempts": 3,
-    "lockout_duration": 900,
-    "passkey_enabled": true,
-    "single_connection": true
+  "cors": {
+    "allow_origins": [
+      "*"
+    ],
+    "allow_methods": [
+      "*"
+    ],
+    "allow_headers": [
+      "*"
+    ]
   },
-  "features": {
-    "yubikey": true,
-    "passkey": true,
-    "webdav": true,
-    "ssh": true,
-    "ai_agent": true,
-    "auto_backup": true,
-    "multi_cloud": true
-  }
+  "s3": {
+    "enable": false,
+    "port": 5246,
+    "ssl": false
+  },
+  "ftp": {
+    "enable": false,
+    "listen": ":5221",
+    "find_pasv_port_attempts": 50,
+    "active_transfer_port_non_20": false,
+    "idle_timeout": 900,
+    "connection_timeout": 30,
+    "disable_active_mode": false,
+    "default_transfer_binary": false,
+    "enable_active_conn_ip_check": true,
+    "enable_pasv_conn_ip_check": true
+  },
+  "sftp": {
+    "enable": false,
+    "listen": ":5222"
+  },
+  "last_launched_version": "dev",
+  "proxy_address": ""
 }

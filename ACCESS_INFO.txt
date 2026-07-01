@@ -1,0 +1,29 @@
+========================================
+OPENBOX - NORTHFLANK DEPLOYMENT
+========================================
+
+URL: https://close--openbox--qqx4cl8p8yz9.code.run
+Port: 2232
+
+SUPER ADMIN (Emergency Only):
+  Username: OpenClose
+  Password: Openpassword
+  Auth: YubiKey + 2FA
+
+SUB-ADMIN (Daily Use):
+  Username: Opendev
+  Password: Masterdev
+  Auth: 2FA
+
+SECURITY FEATURES:
+  ✅ Single port (2232) exposed
+  ✅ YubiKey for Super Admin
+  ✅ 2FA for all users
+  ✅ Device allowlist
+  ✅ Auto-revoke on compromise
+
+GITHUB:
+  https://github.com/OrgHide/openbox
+
+Created: Wed Jul  1 09:31:15 PST 2026
+========================================

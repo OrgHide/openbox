@@ -1,13 +1,8 @@
-# ==========================================
-# OPENBOX USER HIERARCHY - TAILSCALE SECURE
-# ==========================================
-
 super_admin:
   username: OpenClose
   display_name: Charles Tanauan (Master Kanor)
   role: Super Admin
   access_level: full_emergency
-  tailscale_ip: 100.104.142.38
   auth:
     yubikey: true
     two_factor: true
@@ -44,14 +39,12 @@ super_admin:
   status: active
   emergency_access: true
   backup_admin: true
-  created: 2026-07-01
 
 sub_admin:
   username: Opendev
   display_name: hoopstreet (Xenia Xu)
   role: Sub Admin
   access_level: limited_daily
-  tailscale_ip: 100.x.x.x
   auth:
     yubikey: false
     two_factor: true
@@ -92,36 +85,3 @@ sub_admin:
   status: active
   emergency_access: false
   backup_admin: false
-  created: 2026-07-01
-
-security_policies:
-  recycle_bin:
-    enabled: true
-    retention_days: 30
-    requires_super_admin_for_deletion: true
-    prevent_permanent_delete: true
-  super_admin_protection:
-    require_yubikey: true
-    require_2fa: true
-    require_tailscale: true
-    require_ssh_key: true
-    audit_all_actions: true
-    notify_on_access: true
-  high_risk_operations:
-    - delete_entire_space
-    - delete_super_admin
-    - modify_system_config
-    - change_security_policy
-    - modify_user_roles
-  read_only_protection:
-    enabled: true
-    apply_to_sub_admin: true
-    preserve_audit_trail: true
-
-audit:
-  log_all_actions: true
-  log_auth_attempts: true
-  log_sudo_commands: true
-  retention_days: 90
-  alert_on_suspicious: true
-  notify_super_admin_on_high_risk: true

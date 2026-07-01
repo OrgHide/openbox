@@ -1,14 +1,12 @@
 {
   "name": "OpenBox",
-  "title": "OpenBox - Secure Storage Warehouse",
+  "title": "OpenBox - Unified Storage Warehouse",
   "brand": "OpenBox",
   "version": "2.0.0",
-  "description": "Enterprise-grade multi-cloud storage warehouse with Tailscale security",
+  "description": "Enterprise-grade multi-cloud storage warehouse",
   "address": "0.0.0.0",
   "port": 2232,
   "site_title": "OpenBox",
-  "logo": "https://raw.githubusercontent.com/OrgHide/openbox/main/docs/logo.svg",
-  "favicon": "https://raw.githubusercontent.com/OrgHide/openbox/main/docs/favicon.ico",
   "announcement": "Welcome to OpenBox - Secure Storage Warehouse",
   "database": {
     "type": "sqlite3",
@@ -28,29 +26,21 @@
     "port": 5245
   },
   "security": {
-    "tailscale_required": true,
     "yubikey": true,
     "2fa": true,
     "session_timeout": 3600,
     "max_login_attempts": 3,
     "lockout_duration": 900,
     "passkey_enabled": true,
-    "single_connection": true,
-    "device_fingerprinting": true,
-    "clone_detection": true,
-    "auto_revoke": true
+    "single_connection": true
   },
   "features": {
-    "tailscale": true,
     "yubikey": true,
     "passkey": true,
     "webdav": true,
     "ssh": true,
     "ai_agent": true,
     "auto_backup": true,
-    "multi_cloud": true,
-    "device_allowlist": true,
-    "ip_allowlist": true,
-    "role_based_access": true
+    "multi_cloud": true
   }
 }

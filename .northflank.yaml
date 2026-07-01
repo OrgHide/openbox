@@ -1,11 +1,8 @@
-# Northflank Build Configuration
+# Northflank Configuration
 build:
   type: dockerfile
   dockerfile: Dockerfile
   context: .
-  build_args:
-    - OPENBOX_VERSION=2.0.0
-    - SECURITY_LEVEL=maximum
 
 deploy:
   replicas: 1
@@ -14,19 +11,21 @@ deploy:
       protocol: HTTP
       public: true
       name: webui
-    - port: 5244
-      protocol: TCP
-      public: false
-      name: internal
-  
   environment:
-    - OPENBOX_VERSION=2.0.0
-    - SECURITY_LEVEL=maximum
     - ALIST_PORT=2232
     - OPENLIST_PORT=2232
-  
+    - ALIST_CONFIG=/opt/openbox/configs/config.json
+    - OPENLIST_CONFIG=/opt/openbox/configs/config.json
   health_checks:
     - path: /api/public/settings
       port: 2232
       interval: 30
       timeout: 5
+      unhealthy_threshold: 3
+      healthy_threshold: 2
+  resources:
+    cpu: 0.1
+    memory: 256Mi
+  logging:
+    level: info
+    retention: 30d

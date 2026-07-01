@@ -1,0 +1,40 @@
+{
+  "address": "0.0.0.0",
+  "port": 2232,
+  "assets": "",
+  "database": {
+    "type": "sqlite3",
+    "db_file": "/opt/openbox/data/openbox.db"
+  },
+  "temp_dir": "/opt/openbox/tmp",
+  "cache": {
+    "expiration": 60,
+    "cleanup_interval": 120
+  },
+  "log": {
+    "enable": true,
+    "name": "/opt/openbox/logs/openbox.log",
+    "max_size": 10,
+    "max_backups": 5,
+    "max_age": 28,
+    "compress": false
+  },
+  "mcp": {
+    "enable": true,
+    "port": 5245
+  },
+  "site_title": "OpenBox",
+  "announcement": "Welcome to OpenBox - Secure Storage Warehouse",
+  "name": "OpenBox",
+  "brand": "OpenBox",
+  "version": "2.0.0",
+  "security": {
+    "yubikey": true,
+    "2fa": true,
+    "session_timeout": 900,
+    "max_login_attempts": 10,
+    "lockout_duration": 300,
+    "passkey_enabled": true,
+    "single_connection": true
+  }
+}

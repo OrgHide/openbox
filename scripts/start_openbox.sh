@@ -1,29 +1,23 @@
 #!/bin/bash
 echo "📦 Starting OpenBox..."
 
-# Set config path
-export ALIST_CONFIG=~/openbox/configs/openlist/config.json
-export OPENLIST_CONFIG=~/openbox/configs/openlist/config.json
+# Enforce single connection
+~/openbox/scripts/enforce_single_connection.sh
 
-# Kill existing
+# Start OpenBox on port 2232
+export ALIST_PORT=2232
 pkill openlist 2>/dev/null
-pkill alist 2>/dev/null
+openlist server --port 2232 --address 0.0.0.0 > ~/openbox/logs/openbox.log 2>&1 &
 
-# Start OpenList with OpenBox config
-openlist server --config ~/openbox/configs/openlist/config.json > ~/openbox/logs/openbox.log 2>&1 &
+sleep 3
 
-sleep 2
+# Get Tailscale IP if available
+TAILSCALE_IP=$(tailscale ip 2>/dev/null || echo "100.104.142.38")
 
-# Check if running
-if pgrep -x "openlist" > /dev/null; then
-    echo "✅ OpenBox running on http://localhost:5244"
-    echo "   Username: admin"
-    echo "   Password: MasterPassword"
-else
-    echo "⚠️ Trying alternative..."
-    alist server --config ~/openbox/configs/openlist/config.json > ~/openbox/logs/openbox.log 2>&1 &
-    sleep 2
-    if pgrep -x "alist" > /dev/null; then
-        echo "✅ OpenBox running on http://localhost:5244"
-    fi
-fi
+echo ""
+echo "✅ OpenBox running!"
+echo "🔗 Local: http://127.0.0.1:2232"
+echo "🔗 Tailscale: http://$TAILSCALE_IP:2232"
+echo ""
+echo "👑 admin / Openpassword (Super Admin)"
+echo "👤 Opendev / Masterdev (Sub-Admin)"

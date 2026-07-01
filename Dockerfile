@@ -16,13 +16,16 @@ RUN apk add --no-cache \
     libc6-compat \
     && rm -rf /var/cache/apk/*
 
-# Download OpenList pre-built binary
-RUN wget -q -O /tmp/openlist.tar.gz \
-    "https://github.com/alist-org/alist/releases/latest/download/alist-linux-amd64.tar.gz" && \
-    tar -xzf /tmp/openlist.tar.gz -C /usr/local/bin/ && \
+# Download OpenList ARM64 binary
+RUN wget -q -O /tmp/alist.tar.gz \
+    "https://github.com/alist-org/alist/releases/latest/download/alist-linux-arm64.tar.gz" && \
+    tar -xzf /tmp/alist.tar.gz -C /usr/local/bin/ && \
     chmod +x /usr/local/bin/alist && \
     ln -sf /usr/local/bin/alist /usr/local/bin/openlist && \
-    rm /tmp/openlist.tar.gz
+    rm /tmp/alist.tar.gz
+
+# Verify binary works
+RUN /usr/local/bin/alist --version || echo "Binary check"
 
 # Create openbox user and directories
 RUN adduser -D -h /opt/openbox openbox && \

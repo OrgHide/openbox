@@ -1,0 +1,30 @@
+# Northflank Auto-Deploy Configuration
+apiVersion: v1
+kind: Service
+metadata:
+  name: openbox
+  project: openbox
+spec:
+  autoDeploy:
+    enabled: true
+    branch: main
+    webhook: true
+  
+  healthChecks:
+    enabled: true
+    path: /api/public/settings
+    port: 2232
+    interval: 30
+    timeout: 5
+    unhealthyThreshold: 3
+    healthyThreshold: 2
+  
+  autoHeal:
+    enabled: true
+    maxRestarts: 5
+    restartWindow: 300
+  
+  rollback:
+    enabled: true
+    maxRevisions: 5
+    autoRollback: true

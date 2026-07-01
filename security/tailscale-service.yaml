@@ -1,0 +1,21 @@
+# Tailscale Service Definition for OpenBox
+service:
+  name: openbox
+  description: OpenBox Storage Warehouse
+  tailnet: master-kanor.github
+  ports:
+    - protocol: tcp
+      port: 2232
+      description: OpenBox WebUI
+    - protocol: tcp
+      port: 5244
+      description: OpenBox Internal
+    - protocol: tcp
+      port: 8022
+      description: SSH Access
+  tags:
+    - tag:openbox
+    - tag:storage
+  acl:
+    - tag:super-admin
+    - tag:sub-admin

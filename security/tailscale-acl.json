@@ -1,0 +1,31 @@
+{
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["tag:super-admin"],
+      "dst": ["tag:openbox:*", "tag:sub-admin:*"]
+    },
+    {
+      "action": "accept",
+      "src": ["tag:sub-admin"],
+      "dst": ["tag:openbox:2232"]
+    },
+    {
+      "action": "accept",
+      "src": ["tag:openbox"],
+      "dst": ["tag:openbox:*"]
+    }
+  ],
+  "tagOwners": {
+    "tag:super-admin": ["autogroup:admin"],
+    "tag:sub-admin": ["autogroup:admin"],
+    "tag:openbox": ["autogroup:admin"]
+  },
+  "groups": {
+    "group:super-admins": ["OpenClose"],
+    "group:sub-admins": ["Opendev"]
+  },
+  "hosts": {
+    "openbox-northflank": "100.104.142.38"
+  }
+}

@@ -1,0 +1,12 @@
+.git
+.gitignore
+*.md
+*.log
+data/
+logs/
+tmp/
+.backup/
+*.key
+*.pem
+*.secret
+*.token

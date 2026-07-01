@@ -4,13 +4,23 @@ FROM alpine:latest
 RUN apk add --no-cache \
     bash \
     curl \
+    wget \
     rclone \
     openssh \
     git \
     jq \
     tzdata \
     ca-certificates \
+    tar \
+    unzip \
     && rm -rf /var/cache/apk/*
+
+# Install OpenList/AList
+RUN wget -q -O /tmp/openlist.tar.gz \
+    "https://github.com/OpenListTeam/OpenList/releases/latest/download/openlist-linux-amd64.tar.gz" && \
+    tar -xzf /tmp/openlist.tar.gz -C /usr/local/bin/ && \
+    chmod +x /usr/local/bin/openlist && \
+    rm /tmp/openlist.tar.gz
 
 # Create openbox user
 RUN adduser -D -h /opt/openbox openbox

@@ -13,11 +13,7 @@
   },
   "log": {
     "enable": true,
-    "name": "/opt/openbox/logs/openbox.log",
-    "max_size": 10,
-    "max_backups": 5,
-    "max_age": 28,
-    "compress": false
+    "name": "/opt/openbox/logs/openbox.log"
   },
   "mcp": {
     "enable": true,

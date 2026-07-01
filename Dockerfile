@@ -24,12 +24,9 @@ RUN chmod +x /opt/openbox/start.sh
 # Set environment
 ENV ALIST_PORT=2232
 ENV ALIST_CONFIG=/opt/openbox/configs/config.json
-ENV OPENLIST_CONFIG=/opt/openbox/configs/config.json
 ENV ALIST_ADMIN=OpenClose
 ENV ALIST_PASSWORD=Openpassword
 
-# Expose port
 EXPOSE 2232
 
-# Start
 CMD ["/opt/openbox/start.sh"]

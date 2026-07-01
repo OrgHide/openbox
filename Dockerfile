@@ -12,37 +12,37 @@ RUN apk add --no-cache \
     tzdata \
     ca-certificates \
     tar \
-    unzip \
+    gzip \
+    libc6-compat \
     && rm -rf /var/cache/apk/*
 
-# Install OpenList/AList
-RUN wget -q -O /tmp/openlist.tar.gz \
-    "https://github.com/OpenListTeam/OpenList/releases/latest/download/openlist-linux-amd64.tar.gz" && \
-    tar -xzf /tmp/openlist.tar.gz -C /usr/local/bin/ && \
-    chmod +x /usr/local/bin/openlist && \
-    rm /tmp/openlist.tar.gz
-
-# Create openbox user
-RUN adduser -D -h /opt/openbox openbox
-
-# Create directories
-RUN mkdir -p /opt/openbox/configs /opt/openbox/data /opt/openbox/logs /opt/openbox/tmp
-
-# Copy configuration
-COPY configs/config.json /opt/openbox/configs/config.json
-
-# Copy scripts
-COPY scripts/* /opt/openbox/scripts/
-RUN chmod +x /opt/openbox/scripts/*.sh
-
-# Set permissions
-RUN chown -R openbox:openbox /opt/openbox
+# Create openbox user and directories
+RUN adduser -D -h /opt/openbox openbox && \
+    mkdir -p /opt/openbox/configs /opt/openbox/data /opt/openbox/logs /opt/openbox/tmp && \
+    chown -R openbox:openbox /opt/openbox
 
 # Switch to openbox user
 USER openbox
 WORKDIR /opt/openbox
 
-# Set environment variables
+# Copy files
+COPY --chown=openbox:openbox configs/config.json /opt/openbox/configs/config.json
+COPY --chown=openbox:openbox scripts/* /opt/openbox/scripts/
+RUN chmod +x /opt/openbox/scripts/*.sh
+
+# Install OpenList using Go (more reliable)
+USER root
+RUN apk add --no-cache go git && \
+    go install github.com/alist-org/alist/v3@latest && \
+    mv /root/go/bin/alist /usr/local/bin/openlist && \
+    chmod +x /usr/local/bin/openlist && \
+    apk del go git && \
+    rm -rf /root/go
+
+# Switch back to openbox user
+USER openbox
+
+# Set environment
 ENV ALIST_CONFIG=/opt/openbox/configs/config.json
 ENV OPENLIST_CONFIG=/opt/openbox/configs/config.json
 ENV ALIST_PORT=2232

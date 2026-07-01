@@ -10,14 +10,12 @@ export OPENLIST_PORT=2232
 if command -v openlist &> /dev/null; then
     echo "✅ OpenList found at: $(which openlist)"
     echo "Starting OpenList on port 2232..."
-    openlist server --config "$OPENLIST_CONFIG" --port 2232 --address 0.0.0.0
+    openlist server --config "$OPENLIST_CONFIG"
 elif command -v alist &> /dev/null; then
     echo "✅ Alist found at: $(which alist)"
     echo "Starting Alist on port 2232..."
     alist server --config "$ALIST_CONFIG" --port 2232 --address 0.0.0.0
 else
     echo "❌ No OpenList/AList found!"
-    echo "Looking for binary in common locations..."
-    find /usr/local/bin -name "openlist" -o -name "alist" 2>/dev/null || echo "No binary found"
     exit 1
 fi

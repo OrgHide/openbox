@@ -16,6 +16,14 @@ RUN apk add --no-cache \
     libc6-compat \
     && rm -rf /var/cache/apk/*
 
+# Download OpenList pre-built binary
+RUN wget -q -O /tmp/openlist.tar.gz \
+    "https://github.com/alist-org/alist/releases/latest/download/alist-linux-amd64.tar.gz" && \
+    tar -xzf /tmp/openlist.tar.gz -C /usr/local/bin/ && \
+    chmod +x /usr/local/bin/alist && \
+    ln -sf /usr/local/bin/alist /usr/local/bin/openlist && \
+    rm /tmp/openlist.tar.gz
+
 # Create openbox user and directories
 RUN adduser -D -h /opt/openbox openbox && \
     mkdir -p /opt/openbox/configs /opt/openbox/data /opt/openbox/logs /opt/openbox/tmp && \
@@ -29,18 +37,6 @@ WORKDIR /opt/openbox
 COPY --chown=openbox:openbox configs/config.json /opt/openbox/configs/config.json
 COPY --chown=openbox:openbox scripts/* /opt/openbox/scripts/
 RUN chmod +x /opt/openbox/scripts/*.sh
-
-# Install OpenList using Go (more reliable)
-USER root
-RUN apk add --no-cache go git && \
-    go install github.com/alist-org/alist/v3@latest && \
-    mv /root/go/bin/alist /usr/local/bin/openlist && \
-    chmod +x /usr/local/bin/openlist && \
-    apk del go git && \
-    rm -rf /root/go
-
-# Switch back to openbox user
-USER openbox
 
 # Set environment
 ENV ALIST_CONFIG=/opt/openbox/configs/config.json

@@ -72,7 +72,7 @@ jobs:
           echo "✅ Backup created"
       
       - name: Upload Backup Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: openbox-backup-${{ github.run_id }}
           path: backup_*.tar.gz
